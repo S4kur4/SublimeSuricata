@@ -6,21 +6,21 @@ file_extensions:
 scope: text.suricata
 contexts:
   main:
-    - match: '"'
+    - match: '(?<=:| )"|"(?=;)'
       scope: punctuation.definition.string.begin.suricata
       push: double_quoted_string
 
-    - match: '\#'
+    - match: '(?<=^)\#'
       scope: punctuation.definition.comment.suricata
       push:
         - meta_scope: comment.block.suricata
-        - match: $\n?
+        - match: '$\n?'
           pop: true
 
     - match: '\b(pass|drop|reject|alert)\b'
       scope: keyword.action.suricata
 
-    - match: '[a-z]+:![^;]+;'
+    - match: '[a-z]+: ?![^;]+;'
       scope: markup.heading markup.changed
 
     - match: \x20(tcp|udp|ip|icmp|http|ftp|tls|smb|dns)\x20
@@ -40,18 +40,18 @@ contexts:
 
     - match: '\btls\.(version|subject|issuerdn|fingerprint|store)|dns_query|tls_(cert_(subject|issuer|serial|fingerprint|notbefore|notafter|expired|valid)|ssl_state)\b'
       scope: entity.name.tag
-    
+
     - match: \$HTTP(_PORTS|_SERVERS)|\$(EXTERNAL|HOME)_NET|any
       scope: punctuation.definition.variable.srcdst.suricata
 
     - match: app-layer-(event|protocol)
       scope: keyword.operator
 
-    - match: '\bcontent\b'
+    - match: '(?<=;| )content|content(?=\:)'
       scope: keyword.msg.suricata
 
   double_quoted_string:
     - meta_scope: string.quoted.double.suricata
-    - match: '"'
+    - match: '(?<=:| )"|"(?=;)'
       scope: punctuation.definition.string.end.suricata
       pop: true
